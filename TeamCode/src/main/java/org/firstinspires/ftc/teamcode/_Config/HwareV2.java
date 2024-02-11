@@ -38,6 +38,8 @@ public class HwareV2 {
     public void initialize(HardwareMap hwMap) {
         hardwareMap = hwMap;
 
+
+        // Drive Controls (Chassis)
         frontRight = new Motor(hardwareMap, "frontRight", Motor.GoBILDA.RPM_435);
         frontLeft = new Motor(hardwareMap, "frontLeft", Motor.GoBILDA.RPM_435);
         backRight = new Motor(hardwareMap, "backRight", Motor.GoBILDA.RPM_435);
@@ -48,12 +50,11 @@ public class HwareV2 {
         backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
+        // Arm Controls (Main-stage)
         M1 = new MotorEx(hardwareMap, "MainStage1", MotorEx.GoBILDA.RPM_117);
         M2 = new MotorEx(hardwareMap, "MainStage2", MotorEx.GoBILDA.RPM_117);
-
-        M1.setInverted(true);
-
         armMotor = new MotorEx(hardwareMap, "armMotor", MotorEx.GoBILDA.RPM_117);
+        M1.setInverted(true);
         intake = new MotorEx(hardwareMap, "intake", MotorEx.GoBILDA.RPM_435);
 
         // Servos
@@ -63,8 +64,5 @@ public class HwareV2 {
         autoDrop = hardwareMap.get(Servo.class, "autoDrop");
 
 
-
     }
-
-
 }

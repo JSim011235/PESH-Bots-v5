@@ -1,8 +1,4 @@
-package org.firstinspires.ftc.teamcode._Teleop;
-
-import static org.firstinspires.ftc.teamcode._RoadRunner.drive.DriveConstants.MAX_RPM;
-import static org.firstinspires.ftc.teamcode._RoadRunner.drive.DriveConstants.TICKS_PER_REV;
-import static org.firstinspires.ftc.teamcode._RoadRunner.drive.DriveConstants.getMotorVelocityF;
+package org.firstinspires.ftc.teamcode.OutdatedVersions;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode._Config.Hware;
+import org.firstinspires.ftc.teamcode.OutdatedVersions.Hware;
 import org.firstinspires.ftc.teamcode._RoadRunner.drive.SampleMecanumDrive;
 
 @TeleOp(name = "Driver Controls V3", group = "Smart")

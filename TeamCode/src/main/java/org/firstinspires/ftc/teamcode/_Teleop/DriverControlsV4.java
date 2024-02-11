@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode._Config.Hware;
+import org.firstinspires.ftc.teamcode.OutdatedVersions.Hware;
 import org.firstinspires.ftc.teamcode._Config.HwareV2;
 
 @Config
