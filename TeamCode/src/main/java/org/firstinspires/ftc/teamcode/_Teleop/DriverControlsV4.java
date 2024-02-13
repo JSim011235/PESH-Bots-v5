@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode._Teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
@@ -10,6 +12,7 @@ import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -67,6 +70,20 @@ public class DriverControlsV4 extends LinearOpMode {
         drive = new MecanumDrive(robot.frontLeft, robot.frontRight, robot.backLeft, robot.backRight);
         driverOp = new GamepadEx(gamepad1);
         armOp = new GamepadEx(gamepad2);
+
+        // Initial Positions
+        robot.pixelClaw.setPosition(1);
+
+
+        Button pixDrop = new GamepadButton(
+                armOp, GamepadKeys.Button.LEFT_BUMPER
+        );
+
+        pixDrop.whenPressed(new InstantCommand(() -> {
+            robot.pixelClaw.setPosition(0);
+        })).whenReleased(new InstantCommand(() -> {
+            robot.pixelClaw.setPosition(1);
+        }));
 
         waitForStart();
 
@@ -213,11 +230,11 @@ public class DriverControlsV4 extends LinearOpMode {
 
             double pixRotSpeed = Math.max(Math.pow(Math.min(Math.abs(pixRotTarget - pixRotPos) / 800, 2), 1), 0.02);
             if (Math.abs(pixRotTarget - (pixRotPos+100)) < 450)
-                robot.pixRot.setPower(0);
+                robot.pixRot.set(0);
             else if (pixRotTarget < pixRotPos)
-                robot.pixRot.setPower(0.6 * pixRotSpeed);
+                robot.pixRot.set(0.6 * pixRotSpeed);
             else if (pixRotTarget > pixRotPos)
-                robot.pixRot.setPower(-0.6 * pixRotSpeed);
+                robot.pixRot.set(-0.6 * pixRotSpeed);
 
             robot.intake.set(gamepad2.left_trigger != 0 ? gamepad2.left_trigger : -gamepad2.right_trigger);
 
@@ -232,7 +249,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 }
             }
 
-            robot.pixelClaw.setPosition(gamepad2.right_bumper ? 0 : 1);
+//            robot.pixelClaw.setPosition(gamepad2.right_bumper ? 0 : 1);
 
             if (gamepad2.dpad_up && !(gamepad1.left_bumper && gamepad1.right_bumper)) {
                 launchMode = true;

@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode._Config;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
+import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class HwareV2 {
     // input motors exactly as shown below
@@ -21,13 +21,13 @@ public class HwareV2 {
 
     public MotorEx M1, M2, armMotor;
     public Motor intake;
-    public Servo pixelClaw = null;
-    public Servo airplaneLaunch = null;
+    public ServoEx pixelClaw = null;
+    public ServoEx airplaneLaunch = null;
     public DistanceSensor distances = null;
     public ColorRangeSensor pixColor = null;
     public CRServo pixRot = null;
 
-    public Servo autoDrop = null;
+    public ServoEx autoDrop = null;
 
     HardwareMap hardwareMap;
 
@@ -58,10 +58,10 @@ public class HwareV2 {
         intake = new MotorEx(hardwareMap, "intake", MotorEx.GoBILDA.RPM_435);
 
         // Servos
-        pixelClaw = hardwareMap.get(Servo.class, "pixelClaw");
-        airplaneLaunch = hardwareMap.get(Servo.class, "airplaneLaunch");
-        pixRot = hardwareMap.get(CRServo.class, "pixRot");
-        autoDrop = hardwareMap.get(Servo.class, "autoDrop");
+        pixelClaw = new SimpleServo(hardwareMap,"pixelClaw", 0,180);
+        airplaneLaunch = new SimpleServo(hardwareMap,"airplaneLaunch", 0,180);
+        pixRot = new CRServo(hardwareMap, "pixRot");
+        autoDrop = new SimpleServo(hardwareMap,"autoDrop", 0,180);
 
 
     }
