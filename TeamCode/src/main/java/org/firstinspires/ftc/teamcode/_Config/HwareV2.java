@@ -57,6 +57,8 @@ public class HwareV2 {
         M1.setInverted(true);
         intake = new MotorEx(hardwareMap, "intake", MotorEx.GoBILDA.RPM_435);
 
+        armMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
         // Servos
         pixelClaw = new SimpleServo(hardwareMap,"pixelClaw", 0,180);
         airplaneLaunch = new SimpleServo(hardwareMap,"airplaneLaunch", 0,180);
