@@ -54,11 +54,15 @@ public class DriverControlsV4 extends LinearOpMode {
 
 
     public void changeStagePosition(int position) {
-
+        robot.M1.setTargetPosition(position);
+        robot.M2.setTargetPosition(position);
+        robot.M1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.M2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void changeArmPosition(int position) {
-
+        robot.armMotor.setTargetPosition(position);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
@@ -182,13 +186,13 @@ public class DriverControlsV4 extends LinearOpMode {
             }
 
             if (gamepad2.left_stick_y != 0 && !mainManual) {
-                robot.M1.setRunMode(Motor.RunMode.VelocityControl);
-                robot.M2.setRunMode(Motor.RunMode.VelocityControl);
+                robot.M1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.M2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 mainManual = true;
             }
 
             if (gamepad2.right_stick_y != 0 && !armManual) {
-                robot.armMotor.setRunMode(Motor.RunMode.VelocityControl);
+                robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 armManual = true;
             }
 
@@ -199,8 +203,8 @@ public class DriverControlsV4 extends LinearOpMode {
                 else armState = "Manual";
 
             if (mainManual) {
-                robot.M1.setVelocity(-gamepad2.left_stick_y);
-                robot.M2.setVelocity(-gamepad2.left_stick_y);
+                robot.M1.setPower(-gamepad2.left_stick_y);
+                robot.M2.setPower(-gamepad2.left_stick_y);
             }
 //            else {
 //                if (Math.abs(robot.M1.po - main1) < 400) {
@@ -214,10 +218,10 @@ public class DriverControlsV4 extends LinearOpMode {
 //            }
 
             if (armManual) {
-                robot.armMotor.setRunMode(Motor.RunMode.VelocityControl);
-                if (armEnc < -700 && gamepad2.right_stick_y < 0) robot.armMotor.setVelocity(0);
-                else if (armEnc > 900 && gamepad2.right_stick_y > 0) robot.armMotor.setVelocity(0);
-                else robot.armMotor.setVelocity(gamepad2.right_stick_y);
+                robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                if (armEnc < -700 && gamepad2.right_stick_y < 0) robot.armMotor.setPower(0);
+                else if (armEnc > 900 && gamepad2.right_stick_y > 0) robot.armMotor.setPower(0);
+                else robot.armMotor.setPower(gamepad2.right_stick_y);
             }
 //            else {
 //                if (Math.abs(robot.armMotor.getTargetPosition() - armEnc) < 100) robot.armMotor.setPower(.6);

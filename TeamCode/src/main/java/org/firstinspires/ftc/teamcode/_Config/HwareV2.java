@@ -9,6 +9,8 @@ import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,7 +21,7 @@ public class HwareV2 {
     public Motor backRight;
     public Motor backLeft;
 
-    public MotorEx M1, M2, armMotor;
+    public DcMotor M1, M2, armMotor;
     public Motor intake;
     public ServoEx pixelClaw = null;
     public ServoEx airplaneLaunch = null;
@@ -51,13 +53,15 @@ public class HwareV2 {
         backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         // Arm Controls (Main-stage)
-        M1 = new MotorEx(hardwareMap, "MainStage1", MotorEx.GoBILDA.RPM_117);
-        M2 = new MotorEx(hardwareMap, "MainStage2", MotorEx.GoBILDA.RPM_117);
-        armMotor = new MotorEx(hardwareMap, "armMotor", MotorEx.GoBILDA.RPM_117);
-        M1.setInverted(true);
+        M1 = hardwareMap.get(DcMotor.class, "MainStage1");
+        M2 = hardwareMap.get(DcMotor.class, "MainStage2");
+        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+
+        M1.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
+
         intake = new MotorEx(hardwareMap, "intake", MotorEx.GoBILDA.RPM_435);
 
-        armMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         // Servos
         pixelClaw = new SimpleServo(hardwareMap,"pixelClaw", 0,180);
