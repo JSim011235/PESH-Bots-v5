@@ -28,6 +28,19 @@ public class BlueClose extends LinearOpMode {
         robot.armMotor.setTargetPosition(position);
         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+    public void armToPos(int stagePos, int armPos, double power)
+    {
+        changeStagePosition(stagePos);
+        changeArmPosition(armPos);
+        robot.M1.setPower(power);
+        robot.M2.setPower(power);
+        robot.armMotor.setPower(power);
+        while ((Math.abs(stagePos-(int)robot.M1.getCurrentPosition())<50) &&
+                (Math.abs(armPos-(int)robot.armMotor.getCurrentPosition())<50)) {
+
+        }
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -98,10 +111,14 @@ public class BlueClose extends LinearOpMode {
         changeArmPosition(0);
         drive.followTrajectorySequence(cycle1);
         drive.followTrajectorySequence(returnToBackDrop1);
-        changeStagePosition(2500);
-        drive.followTrajectorySequence(waitTime);
-        drive.followTrajectorySequence(waitTime);
+        armToPos(2500, 0, 0.2);
         robot.pixelClaw.setPosition(0);
+        drive.followTrajectorySequence(waitTime);
+        robot.pixelClaw.setPosition(1);
+        robot.intake.set(-1);
+        armToPos(0, 0, 0.5);
+        robot.intake.set(0);
+
 
 
         while (!isStopRequested() && opModeIsActive());
