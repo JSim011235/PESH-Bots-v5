@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode._RegionalTournamentAutons;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -10,7 +11,8 @@ import org.firstinspires.ftc.teamcode._Config.HwareV2;
 import org.firstinspires.ftc.teamcode._RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode._RoadRunner.trajectorysequence.TrajectorySequence;
 
-@Autonomous(group = "Blue", name = "bitchOp")
+@Autonomous(group = "Blue", name = "badOp")
+@Disabled
 public class OldBlueClose extends LinearOpMode {
 
 
@@ -39,7 +41,7 @@ public class OldBlueClose extends LinearOpMode {
         TrajectorySequence cycle1 = drive.trajectorySequenceBuilder(yellowPixel.end())
                 .splineToConstantHeading(new Vector2d(38,12), Math.toRadians(-90))
                 .addDisplacementMarker(() -> {
-                    robot.intake.set(1);
+                    robot.intake.setPower(1);
                 })
                 .lineToLinearHeading(new Pose2d(-52,16.5, Math.toRadians(200)))
                 .waitSeconds(1)

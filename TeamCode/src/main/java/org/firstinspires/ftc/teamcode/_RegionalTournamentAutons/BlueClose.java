@@ -31,14 +31,22 @@ public class BlueClose extends LinearOpMode {
 
     public void armToPos(int stagePos, int armPos, double power)
     {
-        changeStagePosition(stagePos);
-        changeArmPosition(armPos);
+        robot.M1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.M2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.M1.setPower(power);
         robot.M2.setPower(power);
         robot.armMotor.setPower(power);
-        while ((Math.abs(stagePos-(int)robot.M1.getCurrentPosition())<50) &&
-                (Math.abs(armPos-(int)robot.armMotor.getCurrentPosition())<50)) {
-
+        while ((Math.abs(stagePos-(int)robot.M1.getCurrentPosition())>50)) {
+            if (Math.abs(stagePos-(int)robot.M1.getCurrentPosition())<500)
+            {
+                robot.M1.setPower(power/2);
+                robot.M2.setPower(power/2);
+            }
+            changeStagePosition(stagePos);
+            changeArmPosition(armPos);
+            telemetry.addLine("Arm is doing arm things.");
+            telemetry.update();
+            robot.armMotor.setPower(power);
         }
     }
     @Override
@@ -53,35 +61,50 @@ public class BlueClose extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence purplePixel = drive.trajectorySequenceBuilder(startPose)
+        TrajectorySequence center = drive.trajectorySequenceBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(15,38,Math.toRadians(-10)))
+                .addDisplacementMarker(() -> {
+                    robot.autoDrop.setPosition(0.6);
+                })
+                .waitSeconds(.2)
+                .lineToLinearHeading(new Pose2d(63.5,36,Math.toRadians(180)))
+                .addDisplacementMarker(() -> {
+                    robot.autoDrop.setPosition(-0.8);
+                    changeStagePosition(0);
+                    changeArmPosition(0);
+                })
+                .waitSeconds(.2)
+                .addDisplacementMarker(() -> {
+                    robot.autoDrop.setPosition(0.6);
+                })
                 .build();
 
-        TrajectorySequence yellowPixel = drive.trajectorySequenceBuilder(purplePixel.end())
-                .lineToLinearHeading(new Pose2d(63,36,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence cycle1 = drive.trajectorySequenceBuilder(yellowPixel.end())
+        TrajectorySequence cycle1 = drive.trajectorySequenceBuilder(center.end())
                 .lineToLinearHeading(new Pose2d(38,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
-                    robot.intake.set(1);
+                    robot.intake.setPower(0.5);
                 })
-                .lineToLinearHeading(new Pose2d(-51,18, Math.toRadians(200)))
+                .lineToLinearHeading(new Pose2d(-51,18, Math.toRadians(210)))
                 .lineToLinearHeading(new Pose2d(-53,18, Math.toRadians(200)))
-                .lineToLinearHeading(new Pose2d(-53,17, Math.toRadians(190)))
-                .waitSeconds(1)
+                .addDisplacementMarker(() -> {
+                    robot.intake.setPower(1);
+                })
+                .lineToLinearHeading(new Pose2d(-51.5,18, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-53,18, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-51.5,18, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-53,18, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(-40,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
-                    robot.intake.set(-0.5);
+                    robot.intake.setPower(-0.5);
                 })
                 .build();
 
         TrajectorySequence returnToBackDrop1 = drive.trajectorySequenceBuilder(cycle1.end())
-                .lineToLinearHeading(new Pose2d(38,14, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(38,15, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
-                    robot.intake.set(0);
+                    robot.intake.setPower(0);
                 })
-                .lineToLinearHeading(new Pose2d(62.5,40, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(62,40, Math.toRadians(180)))
                 .build();
 
 
@@ -100,24 +123,26 @@ public class BlueClose extends LinearOpMode {
 
 
         robot.pixelClaw.setPosition(1);
-        drive.followTrajectorySequence(purplePixel);
-        robot.autoDrop.setPosition(0.6);
-        drive.followTrajectorySequence(tinyWait);
-        drive.followTrajectorySequence(yellowPixel);
-        robot.autoDrop.setPosition(-0.8);
+        drive.followTrajectorySequence(center);
+
+        drive.followTrajectorySequence(cycle1);
+        drive.followTrajectorySequence(returnToBackDrop1);
+        armToPos(1200, 0, 0.2);
+        robot.pixelClaw.setPosition(0);
         drive.followTrajectorySequence(waitTime);
-        robot.autoDrop.setPosition(0.6);
-        changeStagePosition(0);
-        changeArmPosition(0);
+        robot.pixelClaw.setPosition(1);
+        robot.intake.setPower(-1);
+        armToPos(0, 0, 0.5);
+        robot.intake.setPower(0);
         drive.followTrajectorySequence(cycle1);
         drive.followTrajectorySequence(returnToBackDrop1);
         armToPos(2500, 0, 0.2);
         robot.pixelClaw.setPosition(0);
         drive.followTrajectorySequence(waitTime);
         robot.pixelClaw.setPosition(1);
-        robot.intake.set(-1);
+        robot.intake.setPower(-1);
         armToPos(0, 0, 0.5);
-        robot.intake.set(0);
+        robot.intake.setPower(0);
 
 
 

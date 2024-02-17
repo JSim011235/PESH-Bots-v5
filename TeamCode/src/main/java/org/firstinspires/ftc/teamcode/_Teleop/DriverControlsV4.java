@@ -15,6 +15,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,8 +38,6 @@ public class DriverControlsV4 extends LinearOpMode {
     double SPEEDCONTROL = 1;
     double TURNCONTROL = 1;
 
-
-    private Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
     private HwareV2 robot = new HwareV2();
     private double x, y, xy, main1, main2, armEnc, pixRotPos;
     double THRESHOLD = 0.10, DEGREE = 0;
@@ -50,7 +49,7 @@ public class DriverControlsV4 extends LinearOpMode {
     double distanceAlign = 100;
     boolean alignOn = false;
 
-    final double ArmRotMulti = -5.74836;
+    final double ArmRotMulti = 5.74836;
 
 
     public void changeStagePosition(int position) {
@@ -78,17 +77,6 @@ public class DriverControlsV4 extends LinearOpMode {
         // Initial Positions
         robot.pixelClaw.setPosition(1);
 
-
-        Button pixDrop = new GamepadButton(
-                armOp, GamepadKeys.Button.LEFT_BUMPER
-        );
-
-        pixDrop.whenPressed(new InstantCommand(() -> {
-            robot.pixelClaw.setPosition(0);
-        })).whenReleased(new InstantCommand(() -> {
-            robot.pixelClaw.setPosition(1);
-        }));
-
         waitForStart();
 
         while(opModeIsActive()) {
@@ -102,7 +90,7 @@ public class DriverControlsV4 extends LinearOpMode {
             y = gamepad1.square ? 0 : y; //Perfect straight
             x = gamepad1.cross ? 0 : x; //Perfect straight
 
-            if (gamepad1.right_trigger > 0.5) {SPEEDCONTROL = .4;TURNCONTROL=.4;} else if(gamepad1.left_trigger>0.5) {TURNCONTROL = 0.4; SPEEDCONTROL = 1;} else {SPEEDCONTROL=1; TURNCONTROL=1;}
+            if (gamepad1.left_trigger > 0.5) {SPEEDCONTROL = .4;TURNCONTROL=.4;} else if(gamepad1.right_trigger>0.5) {TURNCONTROL = 0.4; SPEEDCONTROL = 1;} else {SPEEDCONTROL=1; TURNCONTROL=1;}
 
             drive.driveRobotCentric(
                     x,
@@ -132,14 +120,14 @@ public class DriverControlsV4 extends LinearOpMode {
                 // Scoring Max
                 changeStagePosition(1577);
                 changeArmPosition(-452);
-                pixRotTarget = (int)(-452 * ArmRotMulti)-300;
+                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Max";
             } else if (gamepad2.square){
                 //Scoring Low
                 changeStagePosition(1600);
                 changeArmPosition(-180);
-                pixRotTarget = (int)(-180 * ArmRotMulti)-300;
+                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Low";
             } else if (gamepad2.circle && !gamepad2.options) {
@@ -155,7 +143,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 // Scoring Mid
                 changeStagePosition(1400);
                 changeArmPosition(-230);
-                pixRotTarget = (int)(-230 * ArmRotMulti)-300;
+                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Mid";
             }
@@ -164,7 +152,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 // Forward Climb
                 changeStagePosition(1015);
                 changeArmPosition(-308);
-                pixRotTarget = (int)(-308 * ArmRotMulti)-300;
+                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Forward Climb";
             }
@@ -172,7 +160,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 // Backward Climb
                 changeStagePosition(1750);
                 changeArmPosition(257);
-                pixRotTarget = (int)(257 * ArmRotMulti)-300;
+                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Backward Climb";
             }
@@ -180,7 +168,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 // Partially Down
                 changeStagePosition(250);
                 changeArmPosition(-15);
-                pixRotTarget = (int)(-15 * ArmRotMulti)-300;
+                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Partially Down";
             }
@@ -206,41 +194,52 @@ public class DriverControlsV4 extends LinearOpMode {
                 robot.M1.setPower(-gamepad2.left_stick_y);
                 robot.M2.setPower(-gamepad2.left_stick_y);
             }
-//            else {
-//                if (Math.abs(robot.M1.po - main1) < 400) {
-//                    robot.MainStage1.setPower(.5);
-//                    robot.MainStage2.setPower(.5);
-//                }
-//                else {
-//                    robot.MainStage1.setPower(1);
-//                    robot.MainStage2.setPower(1);
-//                }
-//            }
+            else {
+                if (Math.abs(robot.M1.getTargetPosition() - main1) < 400) {
+                    robot.M1.setPower(.5);
+                    robot.M2.setPower(.5);
+                }
+                else {
+                    robot.M1.setPower(1);
+                    robot.M2.setPower(1);
+                }
+            }
 
             if (armManual) {
                 robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 if (armEnc < -700 && gamepad2.right_stick_y < 0) robot.armMotor.setPower(0);
                 else if (armEnc > 900 && gamepad2.right_stick_y > 0) robot.armMotor.setPower(0);
                 else robot.armMotor.setPower(gamepad2.right_stick_y);
+            } else {
+                if (Math.abs(robot.armMotor.getTargetPosition() - armEnc) < 100) robot.armMotor.setPower(.6);
+                else robot.armMotor.setPower(1);
             }
-//            else {
-//                if (Math.abs(robot.armMotor.getTargetPosition() - armEnc) < 100) robot.armMotor.setPower(.6);
-//                else robot.armMotor.setPower(1);
-//            }
 
             // Pixel Rotation Control
             if (pixRotManual) pixRotTarget += (int) (gamepad2.right_stick_x * 200);
-            else if(armManual) pixRotTarget = (int)(armEnc * ArmRotMulti) -300;
+            else if(armManual) pixRotTarget = (int)(armEnc * ArmRotMulti) -500;
 
             double pixRotSpeed = Math.max(Math.pow(Math.min(Math.abs(pixRotTarget - pixRotPos) / 800, 2), 1), 0.02);
             if (Math.abs(pixRotTarget - (pixRotPos+100)) < 450)
-                robot.pixRot.set(0);
+                robot.pixRot.setPower(0);
             else if (pixRotTarget < pixRotPos)
-                robot.pixRot.set(0.6 * pixRotSpeed);
+                robot.pixRot.setPower(0.6 * pixRotSpeed);
             else if (pixRotTarget > pixRotPos)
-                robot.pixRot.set(-0.6 * pixRotSpeed);
+                robot.pixRot.setPower(-0.6 * pixRotSpeed);
 
-            robot.intake.set(gamepad2.left_trigger != 0 ? gamepad2.left_trigger : -gamepad2.right_trigger);
+            if (gamepad2.touchpad) {
+                robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
+            if (gamepad2.share) {
+                robot.intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                gamepad2.rumbleBlips(3);
+            }
+
+            robot.intake.setPower(gamepad2.left_trigger != 0 ? gamepad2.left_trigger : -gamepad2.right_trigger);
 
             if (gamepad2.left_trigger != 0) {
                 if (armState == "Down") {
@@ -253,7 +252,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 }
             }
 
-//            robot.pixelClaw.setPosition(gamepad2.right_bumper ? 0 : 1);
+            robot.pixelClaw.setPosition(gamepad2.right_bumper ? 0 : 1);
 
             if (gamepad2.dpad_up && !(gamepad1.left_bumper && gamepad1.right_bumper)) {
                 launchMode = true;
@@ -302,10 +301,9 @@ public class DriverControlsV4 extends LinearOpMode {
 //            telemetry.addLine("Target position is " + targPos);
 
             telemetry.update();
+        }
 
 
-        }
-        }
 
     }
-
+}
