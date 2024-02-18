@@ -49,7 +49,7 @@ public class DriverControlsV4 extends LinearOpMode {
     double distanceAlign = 100;
     boolean alignOn = false;
 
-    final double ArmRotMulti = 5.74836;
+    final double ArmRotMulti = -5.74836;
 
 
     public void changeStagePosition(int position) {
@@ -111,15 +111,15 @@ public class DriverControlsV4 extends LinearOpMode {
             if (gamepad2.cross) {
                 // Arm Down
                 changeStagePosition(0);
-                changeArmPosition(0);
+                changeArmPosition(-20);
                 pixRotTarget = 0;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Down";
             }
             else if (gamepad2.triangle) {
                 // Scoring Max
-                changeStagePosition(1577);
-                changeArmPosition(-452);
+                changeStagePosition(1560);
+                changeArmPosition(-480);
                 pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Max";
@@ -127,7 +127,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 //Scoring Low
                 changeStagePosition(1600);
                 changeArmPosition(-180);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
+                pixRotTarget = -50;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Low";
             } else if (gamepad2.circle && !gamepad2.options) {
@@ -220,7 +220,7 @@ public class DriverControlsV4 extends LinearOpMode {
             else if(armManual) pixRotTarget = (int)(armEnc * ArmRotMulti) -500;
 
             double pixRotSpeed = Math.max(Math.pow(Math.min(Math.abs(pixRotTarget - pixRotPos) / 800, 2), 1), 0.02);
-            if (Math.abs(pixRotTarget - (pixRotPos+100)) < 450)
+            if (Math.abs(pixRotTarget - (pixRotPos+100)) < 650)
                 robot.pixRot.setPower(0);
             else if (pixRotTarget < pixRotPos)
                 robot.pixRot.setPower(0.6 * pixRotSpeed);

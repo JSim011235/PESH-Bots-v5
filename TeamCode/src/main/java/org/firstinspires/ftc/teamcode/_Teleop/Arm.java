@@ -49,6 +49,7 @@ public class Arm extends LinearOpMode {
     public static double kD =  0;
     public static double kS =  0;
     public static double kV =  0;
+    public static double kCos =  0;
     public static double kA =  0;
 
     public static int target = 0;
@@ -119,6 +120,7 @@ public class Arm extends LinearOpMode {
         // Initial Positions
         robot.pixelClaw.setPosition(1);
         PIDFController pidf = new PIDFController(17, 0 ,3 ,2);
+        ArmFeedforward feedforward;
         boolean auto = false;
         boolean swap = false;
 
@@ -151,9 +153,11 @@ public class Arm extends LinearOpMode {
                     -driverOp.getRightX()
             );
 
+            feedforward = new ArmFeedforward(kS, kCos, kV, kA);
+
 //            double output = feedforward.calculate(pidf.getSetPoint()-robot.M1.getCurrentPosition(),
 //                    arm_max_velocity,arm_max_accel);
-            double output = arm_profile(((int) pidf.getSetPoint()),robot.M1x.getCurrentPosition(), robot.M1x.getCorrectedVelocity(), 0.02);
+            double output = arm_profile(((int) pidf.getSetPoint()),robot.M1x.getCurrentPosition(), robot.M1x.getCorrectedVelocity(), time_diff);
             robot.M1x.setVelocity(output);
             robot.M2x.setVelocity(output);
 
