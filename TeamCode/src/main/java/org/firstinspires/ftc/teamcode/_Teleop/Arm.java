@@ -158,16 +158,27 @@ public class Arm extends LinearOpMode {
 //            double output = feedforward.calculate(pidf.getSetPoint()-robot.M1.getCurrentPosition(),
 //                    arm_max_velocity,arm_max_accel);
             double output = arm_profile(((int) pidf.getSetPoint()),robot.M1x.getCurrentPosition(), robot.M1x.getCorrectedVelocity(), time_diff);
-            robot.M1x.setVelocity(output);
-            robot.M2x.setVelocity(output);
+//            robot.M1x.setVelocity(output);
+//            robot.M2x.setVelocity(output);
+//
+//            robot.M1x.setRunMode(Motor.RunMode.VelocityControl);
+//            robot.M2x.setRunMode(Motor.RunMode.VelocityControl);
 
-            robot.M1x.setRunMode(Motor.RunMode.VelocityControl);
-            robot.M2x.setRunMode(Motor.RunMode.VelocityControl);
+            robot.M1x.setRunMode(Motor.RunMode.PositionControl);
+            robot.M1x.setTargetPosition((int)pidf.getSetPoint());
+            robot.M1x.setPositionCoefficient(kP);
+            robot.M1x.setPositionTolerance(tol);
 
-            robot.M1x.setVeloCoefficients(kP, kI, kD);
-            robot.M2x.setVeloCoefficients(kP, kI, kD);
-            robot.M1x.setFeedforwardCoefficients(kS, kV, kA);
-            robot.M2x.setFeedforwardCoefficients(kS, kV, kA);
+            robot.M2x.setRunMode(Motor.RunMode.PositionControl);
+            robot.M2x.setTargetPosition((int)pidf.getSetPoint());
+            robot.M2x.setPositionCoefficient(kP);
+            robot.M2x.setPositionTolerance(tol);
+
+
+//            robot.M1x.setVeloCoefficients(kP, kI, kD);
+//            robot.M2x.setVeloCoefficients(kP, kI, kD);
+//            robot.M1x.setFeedforwardCoefficients(kS, kV, kA);
+//            robot.M2x.setFeedforwardCoefficients(kS, kV, kA);
 
 
 //            telemetry.addData("p", p);

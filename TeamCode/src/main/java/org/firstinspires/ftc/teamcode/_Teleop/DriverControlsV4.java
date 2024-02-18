@@ -76,6 +76,7 @@ public class DriverControlsV4 extends LinearOpMode {
 
         // Initial Positions
         robot.pixelClaw.setPosition(1);
+        robot.airplaneLaunch.setPosition(1);
 
         waitForStart();
 
@@ -257,7 +258,7 @@ public class DriverControlsV4 extends LinearOpMode {
             if (gamepad2.dpad_up && !(gamepad1.left_bumper && gamepad1.right_bumper)) {
                 launchMode = true;
                 if (gamepad2.left_bumper) {
-                    robot.airplaneLaunch.setPosition(1);
+                    robot.airplaneLaunch.setPosition(-1);
                     if (!RUMBLE) {
                         gamepad2.rumbleBlips(1);
                         RUMBLE = true;
@@ -272,7 +273,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 }
             } else if(launchMode){
                 launchMode = false;
-                robot.airplaneLaunch.setPosition(0);
+                robot.airplaneLaunch.setPosition(1);
                 RUMBLE = true;
                 if (gamepad1.isRumbling()) {
                     gamepad1.stopRumble();
