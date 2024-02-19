@@ -74,9 +74,14 @@ public class DriverControlsV4 extends LinearOpMode {
         driverOp = new GamepadEx(gamepad1);
         armOp = new GamepadEx(gamepad2);
 
+        // Reset Positions
+        robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // Initial Positions
         robot.pixelClaw.setPosition(1);
-        robot.airplaneLaunch.setPosition(1);
+        robot.airplaneLaunch.setPosition(0.7);
 
         waitForStart();
 
@@ -112,7 +117,7 @@ public class DriverControlsV4 extends LinearOpMode {
             if (gamepad2.cross) {
                 // Arm Down
                 changeStagePosition(0);
-                changeArmPosition(-20);
+                changeArmPosition(-15);
                 pixRotTarget = 0;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Down";
@@ -273,7 +278,7 @@ public class DriverControlsV4 extends LinearOpMode {
                 }
             } else if(launchMode){
                 launchMode = false;
-                robot.airplaneLaunch.setPosition(1);
+                robot.airplaneLaunch.setPosition(0.7);
                 RUMBLE = true;
                 if (gamepad1.isRumbling()) {
                     gamepad1.stopRumble();
