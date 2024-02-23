@@ -165,18 +165,6 @@ public class BlueFar extends LinearOpMode {
 
                 .build();
 
-        TrajectorySequence park1 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(60, 60,Math.toRadians(-30)))
-                .build();
-
-        TrajectorySequence park2 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(60,28,Math.toRadians(-30)))
-                .build();
-
-        TrajectorySequence park3 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(13,12,Math.toRadians(-30)))
-                .build();
-
         robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -273,8 +261,21 @@ public class BlueFar extends LinearOpMode {
 
         drive.followTrajectorySequence(waitTime);
 
-        robot.autoDrop.setPosition(1);
+        robot.autoDrop.setPosition(0.5);
 
+        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60, 66,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60,16.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
+                .build();
 
         cycle1 = drive.trajectorySequenceBuilder(cyclePoseStart)
                 .lineToLinearHeading(new Pose2d(38,16.5, Math.toRadians(180)))
