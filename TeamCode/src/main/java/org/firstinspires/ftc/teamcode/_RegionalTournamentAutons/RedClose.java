@@ -183,7 +183,9 @@ public class RedClose extends LinearOpMode {
             redObjectPosition = opencv.getLocation();
 
             if (gamepad2.circle) {
-                cycle = !cycle;
+                cycle = true;
+            } else if (gamepad2.cross) {
+                cycle = false;
             }
 
             if (gamepad2.dpad_left) {
@@ -197,6 +199,24 @@ public class RedClose extends LinearOpMode {
             telemetry.addData("Red Object Position", redObjectPosition);
             telemetry.addData("\n Cycle", cycle);
             telemetry.addData("\n Park Location", park);
+            switch (park)
+            {
+                case 1:
+                    telemetry.addLine("        |Back Drop|      ");
+                    telemetry.addLine("  P   |__________|      ");
+                    telemetry.addLine("                       ");
+                    break;
+                case 2:
+                    telemetry.addLine("        |Back Drop|      ");
+                    telemetry.addLine("        |__________|      ");
+                    telemetry.addLine("                      P           ");
+                    break;
+                case 3:
+                    telemetry.addLine("        |Back Drop|      ");
+                    telemetry.addLine("        |__________|   P  ");
+                    telemetry.addLine("                       ");
+                    break;
+            }
             telemetry.update();
             if(isStopRequested()) {return;}
         }

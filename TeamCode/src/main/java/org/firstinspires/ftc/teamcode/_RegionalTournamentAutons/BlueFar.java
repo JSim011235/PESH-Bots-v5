@@ -207,7 +207,10 @@ public class BlueFar extends LinearOpMode {
 
             if (gamepad2.circle) {
                 cycle = !cycle;
+            } else if (gamepad2.cross) {
+                cycle = false;
             }
+
 
             if (gamepad2.dpad_left) {
                 park = 1;
@@ -220,10 +223,26 @@ public class BlueFar extends LinearOpMode {
             telemetry.addData("Blue Object Position", blueObjectPosition);
             telemetry.addData("\n Cycle: ", cycle);
             telemetry.addData("\n Park Location ", park);
+            switch (park)
+            {
+                case 1:
+                    telemetry.addLine("        |Back Drop|      ");
+                    telemetry.addLine("  P   |__________|      ");
+                    telemetry.addLine("                       ");
+                    break;
+                case 2:
+                    telemetry.addLine("        |Back Drop|      ");
+                    telemetry.addLine("        |__________|      ");
+                    telemetry.addLine("                      P           ");
+                    break;
+                case 3:
+                    telemetry.addLine("        |Back Drop|      ");
+                    telemetry.addLine("        |__________|   P  ");
+                    telemetry.addLine("                       ");
+                    break;
+            }
             telemetry.update();
 
-            telemetry.addData("Blue Object Position", blueObjectPosition);
-            telemetry.update();
             if(isStopRequested()) {return;}
         }
 
