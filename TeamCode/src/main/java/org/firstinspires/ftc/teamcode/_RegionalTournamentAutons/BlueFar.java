@@ -354,10 +354,13 @@ public class BlueFar extends LinearOpMode {
             switch (park) {
                 case 1:
                     drive.followTrajectorySequence(park1);
+                    break;
                 case 2:
                     drive.followTrajectorySequence(park2);
+                    break;
                 case 3:
                     drive.followTrajectorySequence(park3);
+                    break;
             }
         }
 
