@@ -30,8 +30,8 @@ public class UnicornRedPipelineRevamp extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input,mat,Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(158,53,109);
-        Scalar highHSV = new Scalar(176,191,255);
+        Scalar lowHSV = new Scalar(0,45,90);
+        Scalar highHSV = new Scalar(179,139,255);
 
         Core.inRange(mat,lowHSV,highHSV,mat);
 
