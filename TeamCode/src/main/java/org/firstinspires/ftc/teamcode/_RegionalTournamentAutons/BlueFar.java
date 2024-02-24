@@ -91,14 +91,14 @@ public class BlueFar extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-42,38,Math.toRadians(-40)))
+                .lineToLinearHeading(new Pose2d(-36,40,Math.toRadians(-30)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-44,12,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-44,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(20,12,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
                 .lineToLinearHeading(new Pose2d(63,32,Math.toRadians(180)))
                 .waitSeconds(1)
@@ -118,9 +118,9 @@ public class BlueFar extends LinearOpMode {
                 })
                 .waitSeconds(.5)
 
-                .lineToLinearHeading(new Pose2d(-33,12,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-33,16,Math.toRadians(180)))
                 .waitSeconds(.01)
-                .lineToLinearHeading(new Pose2d(20,12,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(.01)
                 .lineToLinearHeading(new Pose2d(64, 43,Math.toRadians(180)))
                 .waitSeconds(1)
@@ -135,15 +135,15 @@ public class BlueFar extends LinearOpMode {
                 .build();
 
         TrajectorySequence center = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-33,24,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-31,24,Math.toRadians(-90)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
 
-                .lineToLinearHeading(new Pose2d(-33,12,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-33,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(20,12,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
                 .lineToLinearHeading(new Pose2d(61.5,33,Math.toRadians(180)))
                 .waitSeconds(1)
@@ -165,6 +165,10 @@ public class BlueFar extends LinearOpMode {
 
                 .build();
 
+        TrajectorySequence waitLil = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(.5)
+
+                .build();
         robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -281,17 +285,17 @@ public class BlueFar extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(38,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     armToPos(0, 0, 0, 0, 0);
-                    robot.intake.setPower(-0.4);
+                    robot.intake.setPower(-1);
                 })
                 .lineToLinearHeading(new Pose2d(-50,18, Math.toRadians(210)))
-                .lineToLinearHeading(new Pose2d(-51,18, Math.toRadians(200)))
+                .lineToLinearHeading(new Pose2d(-55,18, Math.toRadians(200)))
                 .addDisplacementMarker(() -> {
                     robot.intake.setPower(0.8);
                 })
-                .lineToLinearHeading(new Pose2d(-47,15, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(-54,15, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(-47,15, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(-54,15, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-47,17, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-56,17, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-47,17, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-56,17, Math.toRadians(180)))
                 .waitSeconds(.5)
 
                 .lineToLinearHeading(new Pose2d(-45,16.5, Math.toRadians(180)))
@@ -317,14 +321,13 @@ public class BlueFar extends LinearOpMode {
                     runUp = true;
                 })
                 .lineToLinearHeading(new Pose2d(60,40, Math.toRadians(180)))
-                .waitSeconds(1)
+                .waitSeconds(0.5)
                 .addDisplacementMarker(() -> {
                     robot.pixelClaw.setPosition(-1);
                 })
-                .waitSeconds(1.5)
                 .lineToLinearHeading(new Pose2d(61.5,42, Math.toRadians(180)))
+                .waitSeconds(2.5)
                 .addDisplacementMarker(() -> {
-
                     runUp = false;
                 })
 
@@ -346,6 +349,7 @@ public class BlueFar extends LinearOpMode {
 
 
                 if (runUp) {
+                    drive.followTrajectorySequence(waitLil);
                     changeStagePosition(1300);
                     changeArmPosition(-150);
                 } else {

@@ -26,6 +26,7 @@ public class BlueClose extends LinearOpMode {
     private RockBluePipelineRevamp opencv = null;
     private String blueObjectPosition = "center";
     Boolean runUp = false;
+    Boolean raiseArm = false;
     Boolean cycle = false;
     int park = 1;
     double ArmRotMulti = 5.74836;
@@ -111,12 +112,12 @@ public class BlueClose extends LinearOpMode {
 
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(21.5,45,Math.toRadians(30)))
+                .lineToLinearHeading(new Pose2d(21.5,50,Math.toRadians(30)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
-                .lineToLinearHeading(new Pose2d(62,42,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(60.5,40,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -132,7 +133,8 @@ public class BlueClose extends LinearOpMode {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
-                .lineToLinearHeading(new Pose2d(61,28,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(61.5,28,Math.toRadians(180)))
+
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -146,6 +148,7 @@ public class BlueClose extends LinearOpMode {
 
         TrajectorySequence waitTime = drive.trajectorySequenceBuilder(startPose)
                 .waitSeconds(.5)
+                .forward(.01)
                 .addDisplacementMarker(() -> {
                     runUp = false;
                 })
@@ -248,34 +251,17 @@ public class BlueClose extends LinearOpMode {
 
         }
 
-        drive.followTrajectorySequence(waitTime);
-
-        robot.autoDrop.setPosition(0.5);
-
-        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60, 66,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,16.5,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
-                .build();
-
         cycle1 = drive.trajectorySequenceBuilder(cyclePoseStart)
                 .lineToLinearHeading(new Pose2d(38,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     armToPos(0, 0, 0, 0, 0);
-                    robot.intake.setPower(-0.2);
+                    robot.intake.setPower(-0.5);
                 })
                 .lineToLinearHeading(new Pose2d(-51,18, Math.toRadians(210)))
-                .lineToLinearHeading(new Pose2d(-53,18, Math.toRadians(200)))
+                .lineToLinearHeading(new Pose2d(-57,18, Math.toRadians(200)))
                 .addDisplacementMarker(() -> {
-                    robot.intake.setPower(0.5);
+                    raiseArm = true;
+                    robot.intake.setPower(0.9);
                 })
                 .lineToLinearHeading(new Pose2d(-47,15, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(-52,15, Math.toRadians(180)))
@@ -285,7 +271,8 @@ public class BlueClose extends LinearOpMode {
 
                 .lineToLinearHeading(new Pose2d(-45,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
-                    robot.intake.setPower(-0.1);
+                    raiseArm = false;
+                    robot.intake.setPower(-0.5);
                 })
                 .lineToLinearHeading(new Pose2d(-40,16.5, Math.toRadians(180)))
 
@@ -306,12 +293,12 @@ public class BlueClose extends LinearOpMode {
                     runUp = true;
                 })
                 .lineToLinearHeading(new Pose2d(60,40, Math.toRadians(180)))
-                .waitSeconds(1)
+                .waitSeconds(1.5)
                 .addDisplacementMarker(() -> {
                     robot.pixelClaw.setPosition(-1);
                 })
-                .waitSeconds(1.5)
-                .lineToLinearHeading(new Pose2d(60.5,40, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(59.5,40, Math.toRadians(180)))
+                .waitSeconds(2.5)
                 .addDisplacementMarker(() -> {
 
                     runUp = false;
@@ -321,6 +308,25 @@ public class BlueClose extends LinearOpMode {
 
 
                 .build();
+
+        drive.followTrajectorySequence(waitTime);
+
+        robot.autoDrop.setPosition(0.5);
+
+        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60, 66,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60,16.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
+                .build();
+
 
 
         if (cycle) {
@@ -334,8 +340,13 @@ public class BlueClose extends LinearOpMode {
 
 
                 if (runUp) {
-                    changeStagePosition(1300);
-                    changeArmPosition(-150);
+                    if (raiseArm){
+                        changeStagePosition(-80);
+                        changeArmPosition(-50);
+                    } else {
+                        changeStagePosition(1300);
+                        changeArmPosition(-150);
+                    }
                 } else {
                     changeStagePosition(0);
                     changeArmPosition(-5);

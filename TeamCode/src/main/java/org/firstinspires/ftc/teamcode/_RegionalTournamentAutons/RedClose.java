@@ -102,7 +102,7 @@ public class RedClose extends LinearOpMode {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(62.5,-48,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(59,-48,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.6);
                     changeStagePosition(0);
@@ -113,12 +113,12 @@ public class RedClose extends LinearOpMode {
 
 
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(25,-40,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(25,-44,Math.toRadians(-90)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
-                .lineToLinearHeading(new Pose2d(60.5,-53,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(59,-53,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -133,7 +133,7 @@ public class RedClose extends LinearOpMode {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
-                .lineToLinearHeading(new Pose2d(60,-38,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(59,-38,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -254,17 +254,17 @@ public class RedClose extends LinearOpMode {
 
         robot.autoDrop.setPosition(1);
 
-        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60, -66,Math.toRadians(180)))
+        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(55, -66,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66, -66,Math.toRadians(180)))
                 .build();
 
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,-48,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(55,-48,Math.toRadians(180)))
                 .build();
 
-        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,-16.5,Math.toRadians(180)))
+        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(55,-16.5,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66,-16.5,Math.toRadians(180)))
                 .build();
 

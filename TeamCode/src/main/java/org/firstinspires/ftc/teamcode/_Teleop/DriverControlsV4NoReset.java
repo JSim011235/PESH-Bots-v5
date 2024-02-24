@@ -1,35 +1,22 @@
 package org.firstinspires.ftc.teamcode._Teleop;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
-import com.arcrobotics.ftclib.controller.PController;
-import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.ArmFeedforward;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.OutdatedVersions.Hware;
 import org.firstinspires.ftc.teamcode._Config.HwareV2;
 import org.firstinspires.ftc.teamcode._RoadRunner.drive.SampleMecanumDrive;
 
 @Config
 @TeleOp
-public class DriverControlsV4 extends LinearOpMode {
+public class DriverControlsV4NoReset extends LinearOpMode {
     private Motor fL, fR, bL, bR;
     private MotorEx M1, M2;
     private MecanumDrive drive;
@@ -78,10 +65,7 @@ public class DriverControlsV4 extends LinearOpMode {
         SampleMecanumDrive driveV2 = new SampleMecanumDrive(hardwareMap);
 
         // Reset Positions
-        robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         // Initial Positions
         robot.pixelClaw.setPosition(1);
