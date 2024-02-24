@@ -185,7 +185,7 @@ public class BlueClose extends LinearOpMode {
             blueObjectPosition = opencv.getLocation();
 
             if (gamepad2.circle) {
-                cycle = !cycle;
+                cycle = true;
             } else if (gamepad2.cross) {
                 cycle = false;
             }
