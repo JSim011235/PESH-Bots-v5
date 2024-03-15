@@ -97,12 +97,12 @@ public class RedClose extends LinearOpMode {
 
 
         TrajectorySequence center = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(15,-36,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(15,-34,Math.toRadians(-90)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(59,-48,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(61,-48,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.6);
                     changeStagePosition(0);
@@ -113,12 +113,12 @@ public class RedClose extends LinearOpMode {
 
 
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(25,-44,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(27,-42,Math.toRadians(-90)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
-                .lineToLinearHeading(new Pose2d(59,-53,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(61,-53,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -128,12 +128,15 @@ public class RedClose extends LinearOpMode {
                 .build();
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(8,-40,Math.toRadians(-40)))
+                .lineToLinearHeading(new Pose2d(9,-37,Math.toRadians(-25)))
+                .waitSeconds(.01)
+                .lineToLinearHeading(new Pose2d(5,-37,Math.toRadians(-25)))
+
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
-                .lineToLinearHeading(new Pose2d(59,-38,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(61,-39,Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -255,7 +258,7 @@ public class RedClose extends LinearOpMode {
         robot.autoDrop.setPosition(1);
 
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(55, -66,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(53, -66,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66, -66,Math.toRadians(180)))
                 .build();
 
@@ -264,8 +267,10 @@ public class RedClose extends LinearOpMode {
                 .build();
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(55,-16.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(53,-41,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(53,-16.5,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66,-16.5,Math.toRadians(180)))
+
                 .build();
 
 

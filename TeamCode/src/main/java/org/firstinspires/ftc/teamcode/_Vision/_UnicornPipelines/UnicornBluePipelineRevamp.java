@@ -23,15 +23,14 @@ public class UnicornBluePipelineRevamp extends OpenCvPipeline {
             new Point(145+80, 160+100),
             new Point(295+120, 60+100));
     static final Rect BRight = new Rect(
-            new Point(430+200, 200+200),
-            new Point(560+200, 90+100));
-
-    static final double PERCENT_COLOR_THRESHOLD = 0.05;
+            new Point(430+160, 200+100),
+            new Point(560+200, 90+200));
+    static final double PERCENT_COLOR_THRESHOLD = 0.25;
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input,mat,Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(53,0,109);
-        Scalar highHSV = new Scalar(116,98,255);
+        Scalar lowHSV = new Scalar(76,38,120);
+        Scalar highHSV = new Scalar(153,244,255);
 
         Core.inRange(mat,lowHSV,highHSV,mat);
 

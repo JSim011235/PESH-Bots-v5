@@ -10,9 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode._Config.HwareV2;
+import org.firstinspires.ftc.teamcode._RoadRunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode._RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode._RoadRunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode._Vision._RockPipelines.RockBluePipelineRevamp;
+import org.firstinspires.ftc.teamcode._Vision._UnicornPipelines.UnicornBluePipelineRevamp;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -23,7 +25,7 @@ public class BlueClose extends LinearOpMode {
     public HwareV2 robot;
 
     private OpenCvWebcam webcam;
-    private RockBluePipelineRevamp opencv = null;
+    private UnicornBluePipelineRevamp opencv = null;
     private String blueObjectPosition = "center";
     Boolean runUp = false;
     Boolean raiseArm = false;
@@ -95,12 +97,16 @@ public class BlueClose extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence center = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(15,38,Math.toRadians(-10)))
+                .lineToLinearHeading(new Pose2d(15,38,Math.toRadians(0)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(1)
                 .lineToLinearHeading(new Pose2d(62.5,36,Math.toRadians(180)))
+                .waitSeconds(.01)
+                .lineToLinearHeading(new Pose2d(63,36,Math.toRadians(180)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.6);
                     changeStagePosition(0);
@@ -112,12 +118,16 @@ public class BlueClose extends LinearOpMode {
 
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(21.5,50,Math.toRadians(30)))
+                .lineToLinearHeading(new Pose2d(21.5,50,Math.toRadians(20)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
                 .lineToLinearHeading(new Pose2d(60.5,40,Math.toRadians(180)))
+                .waitSeconds(.01)
+                .lineToLinearHeading(new Pose2d(63,40,Math.toRadians(180)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
@@ -128,12 +138,15 @@ public class BlueClose extends LinearOpMode {
                 .build();
 
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(13,50,Math.toRadians(-30)))
+                .lineToLinearHeading(new Pose2d(10,45,Math.toRadians(-30)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
                 .lineToLinearHeading(new Pose2d(61.5,28,Math.toRadians(180)))
+                .waitSeconds(.01)
+                .lineToLinearHeading(new Pose2d(63,28,Math.toRadians(180)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
@@ -146,14 +159,6 @@ public class BlueClose extends LinearOpMode {
 
 
 
-        TrajectorySequence waitTime = drive.trajectorySequenceBuilder(startPose)
-                .waitSeconds(.5)
-                .forward(.01)
-                .addDisplacementMarker(() -> {
-                    runUp = false;
-                })
-
-                .build();
 
 
         robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -164,7 +169,7 @@ public class BlueClose extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"));
 
         // Create the BlueElementLoco pipeline
-        opencv = new RockBluePipelineRevamp();
+        opencv = new UnicornBluePipelineRevamp();
         webcam.setPipeline(opencv);
 
         // Start streaming the camera
@@ -251,6 +256,38 @@ public class BlueClose extends LinearOpMode {
 
         }
 
+        TrajectorySequence waitTime = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .waitSeconds(.5)
+                .forward(.01)
+                .addDisplacementMarker(() -> {
+                    runUp = false;
+                })
+
+                .build();
+
+
+
+
+        drive.followTrajectorySequence(waitTime);
+
+        robot.autoDrop.setPosition(0.5);
+
+        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(55, 66,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(55,16.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
+                .build();
+
+
+
         cycle1 = drive.trajectorySequenceBuilder(cyclePoseStart)
                 .lineToLinearHeading(new Pose2d(38,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
@@ -309,25 +346,6 @@ public class BlueClose extends LinearOpMode {
 
                 .build();
 
-        drive.followTrajectorySequence(waitTime);
-
-        robot.autoDrop.setPosition(0.5);
-
-        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60, 66,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,16.5,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
-                .build();
-
-
 
         if (cycle) {
 
@@ -344,7 +362,7 @@ public class BlueClose extends LinearOpMode {
                         changeStagePosition(-80);
                         changeArmPosition(-50);
                     } else {
-                        changeStagePosition(1300);
+                        changeStagePosition(1400);
                         changeArmPosition(-150);
                     }
                 } else {

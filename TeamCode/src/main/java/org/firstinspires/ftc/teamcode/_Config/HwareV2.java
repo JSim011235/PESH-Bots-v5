@@ -66,13 +66,19 @@ public class HwareV2 {
         M2.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        M1x = new MotorEx(hardwareMap, "MainStage1", Motor.GoBILDA.RPM_117);
-        M2x = new MotorEx(hardwareMap, "MainStage2", Motor.GoBILDA.RPM_117);
-
-        M2x.setInverted(true);
+//        M1x = new MotorEx(hardwareMap, "MainStage1", Motor.GoBILDA.RPM_117);
+//        M2x = new MotorEx(hardwareMap, "MainStage2", Motor.GoBILDA.RPM_117);
+//
+//        M2x.setInverted(true);
 
 
         intake = hardwareMap.get(DcMotor.class, "intake");
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        M1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        M2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
 
         // Servos

@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode._Config.HwareV2;
 import org.firstinspires.ftc.teamcode._RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode._RoadRunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode._Vision._RockPipelines.RockBluePipelineRevamp;
+import org.firstinspires.ftc.teamcode._Vision._UnicornPipelines.UnicornBluePipelineRevamp;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -20,7 +21,7 @@ public class BlueFar extends LinearOpMode {
     public HwareV2 robot;
 
     private OpenCvWebcam webcam;
-    private RockBluePipelineRevamp opencv = null;
+    private UnicornBluePipelineRevamp opencv = null;
     private String blueObjectPosition = "center";
     Boolean runUp = false;
     boolean cycle = false;
@@ -91,7 +92,7 @@ public class BlueFar extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-36,40,Math.toRadians(-30)))
+                .lineToLinearHeading(new Pose2d(-35,40,Math.toRadians(-30)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
@@ -100,19 +101,19 @@ public class BlueFar extends LinearOpMode {
                 .waitSeconds(0.01)
                 .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(63,32,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(65,32,Math.toRadians(180)))
                 .waitSeconds(1)
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.6);
                     changeStagePosition(0);
                     changeArmPosition(0);
                 })
-                .waitSeconds(1)
+                .waitSeconds(1.5)
                 .build();
 
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-28,36,Math.toRadians(150)))
+                .lineToLinearHeading(new Pose2d(-28,38,Math.toRadians(150)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
@@ -122,7 +123,7 @@ public class BlueFar extends LinearOpMode {
                 .waitSeconds(.01)
                 .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(.01)
-                .lineToLinearHeading(new Pose2d(64, 43,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(65, 43,Math.toRadians(180)))
                 .waitSeconds(1)
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
@@ -130,12 +131,12 @@ public class BlueFar extends LinearOpMode {
                     changeArmPosition(0);
                 })
 
-                .waitSeconds(1)
+                .waitSeconds(1.5)
 
                 .build();
 
         TrajectorySequence center = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-31,24,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-34,25,Math.toRadians(-90)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
@@ -145,14 +146,14 @@ public class BlueFar extends LinearOpMode {
                 .waitSeconds(0.01)
                 .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(61.5,33,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(65,33,Math.toRadians(180)))
                 .waitSeconds(1)
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
                     changeArmPosition(0);
                 })
-                .waitSeconds(1)
+                .waitSeconds(1.5)
 
                 .build();
 
@@ -164,6 +165,12 @@ public class BlueFar extends LinearOpMode {
                 })
 
                 .build();
+
+        TrajectorySequence waitLol = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(5)
+
+                .build();
+
 
         TrajectorySequence waitLil = drive.trajectorySequenceBuilder(startPose)
                 .waitSeconds(.5)
@@ -177,7 +184,7 @@ public class BlueFar extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"));
 
         // Create the BlueElementLoco pipeline
-        opencv = new RockBluePipelineRevamp();
+        opencv = new UnicornBluePipelineRevamp();
         webcam.setPipeline(opencv);
 
         // Start streaming the camera
@@ -268,7 +275,7 @@ public class BlueFar extends LinearOpMode {
         robot.autoDrop.setPosition(0.5);
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60, 66,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(52, 64,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
                 .build();
 
@@ -277,7 +284,7 @@ public class BlueFar extends LinearOpMode {
                 .build();
 
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(60,16.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(55,16.5,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
                 .build();
 
@@ -350,7 +357,7 @@ public class BlueFar extends LinearOpMode {
 
                 if (runUp) {
                     drive.followTrajectorySequence(waitLil);
-                    changeStagePosition(1300);
+                    changeStagePosition(1350);
                     changeArmPosition(-150);
                 } else {
                     changeStagePosition(0);
@@ -375,6 +382,7 @@ public class BlueFar extends LinearOpMode {
                 drive.update();
             }
         } else {
+            drive.followTrajectorySequence(waitLol);
             switch (park) {
                 case 1:
                     drive.followTrajectorySequence(park1);

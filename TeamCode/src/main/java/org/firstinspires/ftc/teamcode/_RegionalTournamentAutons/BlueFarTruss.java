@@ -7,23 +7,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode._Config.HwareV2;
-import org.firstinspires.ftc.teamcode._RoadRunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode._RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode._RoadRunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode._Vision._RockPipelines.RockBluePipelineRevamp;
-import org.firstinspires.ftc.teamcode._Vision._UnicornPipelines.UnicornRedPipelineRevamp;
+import org.firstinspires.ftc.teamcode._Vision._UnicornPipelines.UnicornBluePipelineRevamp;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(group = "Red", name = "RedFar")
-public class RedFar extends LinearOpMode {
+@Autonomous(group = "Blue", name = "BlueFarTruss")
+public class BlueFarTruss extends LinearOpMode {
     public HwareV2 robot;
 
     private OpenCvWebcam webcam;
-    private UnicornRedPipelineRevamp opencv = null;
-    private String redObjectPosition = "center";
+    private UnicornBluePipelineRevamp opencv = null;
+    private String blueObjectPosition = "center";
     Boolean runUp = false;
     boolean cycle = false;
     int park = 1;
@@ -88,53 +86,43 @@ public class RedFar extends LinearOpMode {
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        Pose2d startPose = new Pose2d(-36, -60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-36, 60, Math.toRadians(90));
 
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence right = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-37,-44,Math.toRadians(-220)))
-                .lineToLinearHeading(new Pose2d(-34,-44,Math.toRadians(-220)))
-
-
+                .lineToLinearHeading(new Pose2d(-35,40,Math.toRadians(-30)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-33,-63,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-44,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(40,-63,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(59,-50,Math.toRadians(180)))
-                .waitSeconds(.01)
-                .lineToLinearHeading(new Pose2d(61.5,-50,Math.toRadians(180)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-
+                .lineToLinearHeading(new Pose2d(65,32,Math.toRadians(180)))
                 .waitSeconds(1)
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.6);
                     changeStagePosition(0);
                     changeArmPosition(0);
                 })
-                .waitSeconds(1)
+                .waitSeconds(1.5)
                 .build();
 
 
         TrajectorySequence left = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-41,-40,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-28,38,Math.toRadians(150)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
 
-                .lineToLinearHeading(new Pose2d(-33,-63,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-33,16,Math.toRadians(180)))
                 .waitSeconds(.01)
-                .lineToLinearHeading(new Pose2d(40,-63,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(.01)
-                .lineToLinearHeading(new Pose2d(59,-40,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(61.5,-40,Math.toRadians(180)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-
+                .lineToLinearHeading(new Pose2d(65, 43,Math.toRadians(180)))
                 .waitSeconds(1)
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
@@ -142,34 +130,29 @@ public class RedFar extends LinearOpMode {
                     changeArmPosition(0);
                 })
 
-                .waitSeconds(1)
+                .waitSeconds(1.5)
 
                 .build();
 
         TrajectorySequence center = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-36,-32,Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-34,25,Math.toRadians(-90)))
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(0.6);
                 })
                 .waitSeconds(.5)
 
-                .lineToLinearHeading(new Pose2d(-48,-63,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-33,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(45,-63,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45,16,Math.toRadians(180)))
                 .waitSeconds(0.01)
-                .lineToLinearHeading(new Pose2d(59,-46,Math.toRadians(180)))
-                .waitSeconds(0.01)
-
-                .lineToLinearHeading(new Pose2d(62,-46,Math.toRadians(180)), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-
+                .lineToLinearHeading(new Pose2d(65,33,Math.toRadians(180)))
                 .waitSeconds(1)
                 .addDisplacementMarker(() -> {
                     robot.autoDrop.setPosition(-0.8);
                     changeStagePosition(0);
                     changeArmPosition(0);
                 })
-                .waitSeconds(1)
+                .waitSeconds(1.5)
 
                 .build();
 
@@ -182,7 +165,16 @@ public class RedFar extends LinearOpMode {
 
                 .build();
 
+        TrajectorySequence waitLol = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(5)
 
+                .build();
+
+
+        TrajectorySequence waitLil = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(.5)
+
+                .build();
         robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -191,7 +183,7 @@ public class RedFar extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"));
 
         // Create the BlueElementLoco pipeline
-        opencv = new UnicornRedPipelineRevamp();
+        opencv = new UnicornBluePipelineRevamp();
         webcam.setPipeline(opencv);
 
         // Start streaming the camera
@@ -209,11 +201,14 @@ public class RedFar extends LinearOpMode {
         });
 
         while (!isStarted()) {
-            redObjectPosition = opencv.getLocation();
+            blueObjectPosition = opencv.getLocation();
 
             if (gamepad2.circle) {
                 cycle = !cycle;
+            } else if (gamepad2.cross) {
+                cycle = false;
             }
+
 
             if (gamepad2.dpad_left) {
                 park = 1;
@@ -223,10 +218,9 @@ public class RedFar extends LinearOpMode {
                 park = 3;
             }
 
-            telemetry.addData("Red Object Position", redObjectPosition);
+            telemetry.addData("Blue Object Position", blueObjectPosition);
             telemetry.addData("\n Cycle: ", cycle);
             telemetry.addData("\n Park Location ", park);
-
             switch (park)
             {
                 case 1:
@@ -245,8 +239,8 @@ public class RedFar extends LinearOpMode {
                     telemetry.addLine("                       ");
                     break;
             }
-
             telemetry.update();
+
             if(isStopRequested()) {return;}
         }
 
@@ -259,7 +253,7 @@ public class RedFar extends LinearOpMode {
 
 
 
-        switch (redObjectPosition){
+        switch (blueObjectPosition){
             case "center":
                 drive.followTrajectorySequence(center);
                 cyclePoseStart = center.end();
@@ -277,31 +271,44 @@ public class RedFar extends LinearOpMode {
 
         drive.followTrajectorySequence(waitTime);
 
-        robot.autoDrop.setPosition(1);
+        robot.autoDrop.setPosition(0.5);
 
+        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(52, 64,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
+                .build();
+
+        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(55,16.5,Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
+                .build();
 
         cycle1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(38,-16.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(38,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     armToPos(0, 0, 0, 0, 0);
-                    robot.intake.setPower(-0.4);
+                    robot.intake.setPower(-1);
                 })
-                .lineToLinearHeading(new Pose2d(-50,-17, Math.toRadians(210)))
-                .lineToLinearHeading(new Pose2d(-57.5,-18, Math.toRadians(200)))
+                .lineToLinearHeading(new Pose2d(-50,18, Math.toRadians(210)))
+                .lineToLinearHeading(new Pose2d(-55,18, Math.toRadians(200)))
                 .addDisplacementMarker(() -> {
                     robot.intake.setPower(0.8);
                 })
-                .lineToLinearHeading(new Pose2d(-47,-22, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(-58,-22, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(-47,-22, Math.toRadians(180)))
-
+                .lineToLinearHeading(new Pose2d(-47,17, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-56,17, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-47,17, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-56,17, Math.toRadians(180)))
                 .waitSeconds(.5)
 
-                .lineToLinearHeading(new Pose2d(-45,-16.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-45,16.5, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     robot.intake.setPower(-0.5);
                 })
-                .lineToLinearHeading(new Pose2d(-40,-16.5, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-40,16.5, Math.toRadians(180)))
 
                 .addDisplacementMarker(() ->  {
                     robot.intake.setPower(0);
@@ -312,43 +319,26 @@ public class RedFar extends LinearOpMode {
 
         returnToBackDrop1 = drive.trajectorySequenceBuilder(cycle1.end())
 
-                .lineToLinearHeading(new Pose2d(50,-15, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(59,-40, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(50,15, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(59,40, Math.toRadians(180)))
 
                 .addDisplacementMarker(() -> {
                     robot.intake.setPower(0);
                     runUp = true;
                 })
-                .lineToLinearHeading(new Pose2d(60,-40, Math.toRadians(180)))
-                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(60,40, Math.toRadians(180)))
+                .waitSeconds(0.5)
                 .addDisplacementMarker(() -> {
                     robot.pixelClaw.setPosition(-1);
                 })
-                .waitSeconds(1.5)
-                .lineToLinearHeading(new Pose2d(61.5,-42, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(61.5,42, Math.toRadians(180)))
+                .waitSeconds(2.5)
                 .addDisplacementMarker(() -> {
-
                     runUp = false;
                 })
 
 
 
-
-                .build();
-
-        TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(53, -66,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(66, -66,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(55,-48,Math.toRadians(180)))
-                .build();
-
-        TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
-                .lineToLinearHeading(new Pose2d(53,-41,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(53,-16.5,Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(66,-16.5,Math.toRadians(180)))
 
                 .build();
 
@@ -365,7 +355,8 @@ public class RedFar extends LinearOpMode {
 
 
                 if (runUp) {
-                    changeStagePosition(1300);
+                    drive.followTrajectorySequence(waitLil);
+                    changeStagePosition(1350);
                     changeArmPosition(-150);
                 } else {
                     changeStagePosition(0);
@@ -390,6 +381,7 @@ public class RedFar extends LinearOpMode {
                 drive.update();
             }
         } else {
+            drive.followTrajectorySequence(waitLol);
             switch (park) {
                 case 1:
                     drive.followTrajectorySequence(park1);
@@ -400,7 +392,6 @@ public class RedFar extends LinearOpMode {
                 case 3:
                     drive.followTrajectorySequence(park3);
                     break;
-
             }
         }
 
