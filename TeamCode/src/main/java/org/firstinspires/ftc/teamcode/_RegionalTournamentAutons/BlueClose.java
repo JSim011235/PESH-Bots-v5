@@ -273,17 +273,27 @@ public class BlueClose extends LinearOpMode {
         robot.autoDrop.setPosition(0.5);
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(45, 66,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(55, 66,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66, 66,Math.toRadians(180)))
+                .waitSeconds(3)
+                .lineToLinearHeading(new Pose2d(45, 66,Math.toRadians(180)))
+                .lineToLinearHeading(startPose)
                 .build();
 
         TrajectorySequence park2 = drive.trajectorySequenceBuilder(cyclePoseStart)
                 .lineToLinearHeading(new Pose2d(60,40,Math.toRadians(180)))
+                .waitSeconds(3)
+                .lineToLinearHeading(startPose)
                 .build();
 
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(cyclePoseStart)
+                .lineToLinearHeading(new Pose2d(45,16.5,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(55,16.5,Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(66, 16.5,Math.toRadians(180)))
+                .waitSeconds(3)
+                .lineToLinearHeading(new Pose2d(45,16.5,Math.toRadians(180)))
+                .lineToLinearHeading(startPose)
                 .build();
 
 

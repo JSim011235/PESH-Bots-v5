@@ -29,16 +29,27 @@ public class DriverControlsV4 extends LinearOpMode {
 
     private HwareV2 robot = new HwareV2();
     private double x, y, xy, main1, main2, armEnc, pixRotPos;
+
+
     double THRESHOLD = 0.10, DEGREE = 0;
     double Sa, Sb, Sc, Aa, Ab, Ac, targPos, bbDist;
-    boolean RUMBLE = true, mainManual = true, armManual = true, pixRotManual = false, launchMode = false;
+    boolean RUMBLE = true, mainManual = true, armManual = true, pixRotManual = false, launchMode = false, idle=false;
     int pixRotTarget = 0, armDownCount = 0;
     String armState = "Not Set";
 
     double distanceAlign = 100;
     boolean alignOn = false;
 
-    final double ArmRotMulti = -5.74836;
+    final static double ArmRotMulti = -5.74836;
+
+    public static int downA = -30, downS = 0, downP = -500;
+    public static int maxA = -400, maxS = 1560, maxP = 2259;
+    public static int lowA = -140, lowS = 1720, lowP = 300;
+    public static int midA = -220, midS = 1450, midP = 700;
+    public static int lmidA = -150, lmidS = 1500, lmidP = 134;
+    public static int fcA = -308, fcS = 1015, fcP = 0;
+    public static int bcA = 400, bcS = 1750, bcP = -1700;
+    public static int pdownA = -15, pdownS = 250, pdownP = 0;
 
 
     public void changeStagePosition(int position) {
@@ -113,24 +124,24 @@ public class DriverControlsV4 extends LinearOpMode {
 
             if (gamepad2.cross) {
                 // Arm Down
-                changeStagePosition(0);
-                changeArmPosition(-30);
-                pixRotTarget = -500;
+                changeStagePosition(downS);
+                changeArmPosition(downA);
+                pixRotTarget = downP;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Down";
             }
             else if (gamepad2.triangle) {
                 // Scoring Max
-                changeStagePosition(1560);
-                changeArmPosition(-480);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
+                changeStagePosition(maxS);
+                changeArmPosition(maxA);
+                pixRotTarget = maxP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Max";
             } else if (gamepad2.square){
                 //Scoring Low
-                changeStagePosition(1640);
-                changeArmPosition(-80);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-1000;
+                changeStagePosition(lowS);
+                changeArmPosition(lowA);
+                pixRotTarget = lowP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-1000;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Low";
             } else if (gamepad2.circle && !gamepad2.options) {
@@ -144,37 +155,51 @@ public class DriverControlsV4 extends LinearOpMode {
 //                MSA = 180 - Math.toDegrees(Aa + Ab + Ac);
 //                AA = -MSA;
                 // Scoring Mid
-                changeStagePosition(1400);
-                changeArmPosition(-180);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-900;
+                changeStagePosition(midS);
+                changeArmPosition(midA);
+                pixRotTarget = midP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-900;
+                mainManual = armManual = pixRotManual = false;
+                armState = "Scoring Mid";
+            }
+            else if (gamepad2.share) {
+                // Scoring Low Mid
+                changeStagePosition(lmidS);
+                changeArmPosition(lmidA);
+                pixRotTarget = lmidP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-900;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Scoring Mid";
             }
             else if (gamepad2.dpad_up) {}
             else if (gamepad2.dpad_right) {
                 // Forward Climb
-                changeStagePosition(1015);
-                changeArmPosition(-308);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
+                changeStagePosition(fcS);
+                changeArmPosition(fcA);
+                pixRotTarget = fcP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Forward Climb";
             }
             else if (gamepad2.dpad_left) {
                 // Backward Climb
-                changeStagePosition(1750);
-                changeArmPosition(257);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
+                changeStagePosition(bcS);
+                changeArmPosition(bcA);
+                pixRotTarget = bcP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Backward Climb";
             }
             else if (gamepad2.dpad_down) {
                 // Partially Down
-                changeStagePosition(250);
-                changeArmPosition(-15);
-                pixRotTarget = (int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
+                changeStagePosition(pdownS);
+                changeArmPosition(pdownA);
+                pixRotTarget = pdownP;//(int)(robot.armMotor.getTargetPosition() * ArmRotMulti)-500;
                 mainManual = armManual = pixRotManual = false;
                 armState = "Partially Down";
             }
+
+//            idle mode
+            if (gamepad2.left_trigger+gamepad2.right_trigger==0&&(armState.equals("Down")&&Math.abs(robot.armMotor.getTargetPosition() - armEnc) < 30)&&(Math.abs(robot.M1.getTargetPosition() - main1) < 40))
+                idle = true;
+            else
+                idle = false;
 
             if (gamepad2.left_stick_y != 0 && !mainManual) {
                 robot.M1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -198,7 +223,11 @@ public class DriverControlsV4 extends LinearOpMode {
                 robot.M2.setPower(-gamepad2.left_stick_y);
             }
             else {
-                if (Math.abs(robot.M1.getTargetPosition() - main1) < 400) {
+                if (idle) {
+                    robot.M1.setPower(0);
+                    robot.M2.setPower(0);
+                }
+                else if (Math.abs(robot.M1.getTargetPosition() - main1) < 400) {
                     robot.M1.setPower(.5);
                     robot.M2.setPower(.5);
                 }
@@ -214,7 +243,8 @@ public class DriverControlsV4 extends LinearOpMode {
                 else if (armEnc > 900 && gamepad2.right_stick_y > 0) robot.armMotor.setPower(0);
                 else robot.armMotor.setPower(gamepad2.right_stick_y);
             } else {
-                if (Math.abs(robot.armMotor.getTargetPosition() - armEnc) < 100) robot.armMotor.setPower(.6);
+                if (idle) robot.armMotor.setPower(0);
+                else if (Math.abs(robot.armMotor.getTargetPosition() - armEnc) < 100) robot.armMotor.setPower(.6);
                 else robot.armMotor.setPower(1);
             }
 
@@ -223,7 +253,7 @@ public class DriverControlsV4 extends LinearOpMode {
             else if(armManual) pixRotTarget = (int)(armEnc * ArmRotMulti) -800;
 
             double pixRotSpeed = Math.max(Math.pow(Math.min(Math.abs(pixRotTarget - pixRotPos) / 800, 2), 1), 0.02);
-            if (Math.abs(pixRotTarget - (pixRotPos+100)) < 650)
+            if ((Math.abs(pixRotTarget - (pixRotPos+100)) < 650)||idle)
                 robot.pixRot.setPower(0);
             else if (pixRotTarget < pixRotPos)
                 robot.pixRot.setPower(0.6 * pixRotSpeed);
@@ -236,18 +266,12 @@ public class DriverControlsV4 extends LinearOpMode {
                 robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
-            if (gamepad2.share) {
-                robot.intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                gamepad2.rumbleBlips(3);
-            }
-
             robot.intake.setPower(gamepad2.left_trigger != 0 ? gamepad2.left_trigger : -gamepad2.right_trigger);
 
             if (gamepad2.left_trigger != 0) {
                 if (armState == "Down") {
-                    changeStagePosition(-80);
-                    changeArmPosition(-50);
+                    changeStagePosition(downS-80);
+                    changeArmPosition(downA-20);
                     pixRotTarget = -500;
                 }
                 if (robot.pixColor.getDistance(DistanceUnit.MM) < 10) {
