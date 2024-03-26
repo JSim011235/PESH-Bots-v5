@@ -260,11 +260,6 @@ public class DriverControlsV4 extends LinearOpMode {
             else if (pixRotTarget > pixRotPos)
                 robot.pixRot.setPower(-0.6 * pixRotSpeed);
 
-            if (gamepad2.touchpad) {
-                robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
 
             robot.intake.setPower(gamepad2.left_trigger != 0 ? gamepad2.left_trigger : -gamepad2.right_trigger);
 

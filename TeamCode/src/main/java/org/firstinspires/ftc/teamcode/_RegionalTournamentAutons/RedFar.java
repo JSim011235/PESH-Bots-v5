@@ -182,6 +182,13 @@ public class RedFar extends LinearOpMode {
 
                 .build();
 
+        TrajectorySequence lwaitTime = drive.trajectorySequenceBuilder(startPose)
+                .waitSeconds(1)
+                .addDisplacementMarker(() -> {
+                    runUp = false;
+                })
+
+                .build();
 
         robot.M1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.M2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -258,6 +265,7 @@ public class RedFar extends LinearOpMode {
 
 
 
+//        drive.followTrajectorySequence(lwaitTime);
 
         switch (redObjectPosition){
             case "center":

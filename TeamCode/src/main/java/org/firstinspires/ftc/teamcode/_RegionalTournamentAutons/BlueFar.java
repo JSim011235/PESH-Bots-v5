@@ -248,7 +248,7 @@ public class BlueFar extends LinearOpMode {
         robot.pixelClaw.setPosition(1);
 
         waitForStart();
-
+        drive.followTrajectorySequence(waitLol);
         Pose2d cyclePoseStart = null;
 
 
